@@ -1,5 +1,7 @@
 # Qazaq IR: The Agglutinative Intermediate Representation for Deterministic AI
 
+> **License:** This Whitepaper is licensed under the [Creative Commons Attribution-NoDerivatives 4.0 International License (CC BY-ND 4.0)](https://creativecommons.org/licenses/by-nd/4.0/). You are free to share and redistribute this material in any medium or format, provided you give appropriate credit to the author, **Daulet Baimurza**. You may not distribute modified versions of this document.
+
 ## 1. Abstract
 
 The rapid scaling of Large Language Models (LLMs) has exposed a fundamental architectural bottleneck: the reliance on analytical languages (e.g., English) as the primary medium for logical reasoning and code generation. In analytical linguistics, semantic meaning is heavily dependent on word order and hidden context. This forces transformer architectures to rely on computationally expensive attention mechanisms, resulting in a quadratic $O(n^2)$ computational complexity. This inherent linguistic ambiguity is the root cause of both exorbitant energy consumption and non-deterministic outputs (hallucinations) during automated code synthesis.
