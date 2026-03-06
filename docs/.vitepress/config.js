@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Qazaq IR",
   description: "The First Agglutinative Intermediate Representation for Deterministic LLM Code Generation",
+  base: '/qazaq-ir/',
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/shanraq_neuron.svg' }]
