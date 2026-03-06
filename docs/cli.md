@@ -1,6 +1,6 @@
 # CLI Compiler (`qazaqc`)
 
-The Qazaq IR Engine can be used as a standalone executable compiler, bringing deterministic $\mathcal{O}(1)$ compilation directly to the terminal.
+The Qazaq IR Engine can be used as a standalone executable compiler, bringing deterministic O(1) compilation directly to the terminal.
 
 ## Installation
 
@@ -59,3 +59,21 @@ Compilation Time: 554.167µs
 ```
 
 As demonstrated, the execution operates within microseconds, proving the linear algorithm's unmatched performance for LLM-driven environments.
+
+### Hallucination Protection
+
+Attempting to compile an invalid LLM hallucination (such as writing data *before* memory allocation) stops instantly in O(1) time before generating any code:
+
+```bash
+$ qazaqc examples/02_fatal_hallucination.json --emit llvm -o test.ll
+
+=== Qazaq IR Compiler (qazaqc) v0.2.0 ===
+
+Input Payload: examples/02_fatal_hallucination.json
+Emitting to: Llvm Target
+» JSON loaded. Routing Intent...
+
+HALLUCINATION DETECTED: COMPILATION ABORTED
+
+HallucinationDetected("FATAL HALLUCINATION: Suffix [WriteToTarget] illegally agglutinated to Root [StateObject(\"Transaction\")]. Intent rejected.")
+```

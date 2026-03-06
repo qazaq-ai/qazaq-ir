@@ -1,0 +1,17 @@
+{
+    "tokens": [
+        {
+            "root": {
+                "type": "StateObject",
+                "value": "Transaction"
+            },
+            "morphs": [
+                "AllocHeap",
+                {
+                    "SignWithMLDSA": "operator_cold_key"
+                },
+                "WriteToTarget"
+            ]
+        }
+    ]
+}

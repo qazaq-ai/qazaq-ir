@@ -10,7 +10,7 @@
 Our logo is not just a brand; it is the visual embodiment of the Qazaq IR architecture:
 1. **The Shanraq:** The circular framework symbolizes the "Шанырақ" (Shanraq) — the structural core of a yurt, representing unity, foundation, and an indestructible architectural constant (the **Root Entity**).
 2. **The Neural Pathways:** The intersecting lines represent neurons and the deterministic flow of electrical signals along these pathways, mirroring how our model processes logic linearly ($\mathcal{O}(n)$) through isolated functional morphemes (the **Suffixes**).
-3. **The Azure Sky:** The deep blue color signifies the pure, cloudless sky (Көк Аспан) — an ancient symbol of clarity. It reflects the operational philosophy of Qazaq IR: pure, secure, and hallucination-free AI performance.
+3. **The Blood Red:** The deep red color signifies vital energy (Қан) and unyielding sovereignty. It reflects the operational philosophy of Qazaq IR: pure, secure, and hallucination-free AI performance.
 Modern Large Language Models (LLMs) suffer from severe energy inefficiencies and code hallucinations due to their reliance on analytical languages (like English). Processing analytical context requires quadratic O(n^2) computational complexity in attention mechanisms.
 
 **Qazaq IR** introduces a paradigm shift. Inspired by the strict mathematical rules of the agglutinative Kazak language, it provides a deterministic, linear O(n) intermediate compilation layer for AI. By assembling logic through immutable "roots" and isolated functional "suffixes" (morphemes) without hidden contexts, Qazaq IR eliminates code ambiguity and drastically reduces the energy cost of automated code generation.
