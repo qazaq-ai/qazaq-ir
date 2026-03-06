@@ -44,13 +44,13 @@ impl CodegenBackend {
                     emit_buffer.push_str("// [Suffix] MakeMutable: Opening execution lifecycle\n");
                     emit_buffer.push_str(&format!("{}.make_mutable();\n", root_var_name));
                 }
-                SuffixMorpheme::SignWithMLDSA => {
+                SuffixMorpheme::SignWithMLDSA(key_alias) => {
                     emit_buffer.push_str(
                         "// [Suffix] SignWithMLDSA: Executing Post-Quantum Crypto Signature\n",
                     );
                     emit_buffer.push_str(&format!(
-                        "let signature = orda_pqc::mldsa_sign(&{});\n",
-                        root_var_name
+                        "let signature = orda_pqc::mldsa_sign(&{}, \"{}\");\n",
+                        root_var_name, key_alias
                     ));
                 }
                 SuffixMorpheme::WriteToTarget => {

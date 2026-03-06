@@ -67,15 +67,18 @@ impl LlvmBackend {
                     emit_buffer
                         .push_str(&format!("  call void @make_mutable(i8* {})\n", current_ptr));
                 }
-                SuffixMorpheme::SignWithMLDSA => {
+                SuffixMorpheme::SignWithMLDSA(key_alias) => {
                     let sig_ptr = format!("%var_{}", var_counter);
+                    let alias_str = format!("@{}", key_alias);
                     *var_counter += 1;
                     emit_buffer.push_str(
                         "  ; [Suffix] SignWithMLDSA: Executing Post-Quantum Crypto Signature\n",
                     );
+
+                    // Emulate declaring the key global string if needed, or simply pass the named pointer.
                     emit_buffer.push_str(&format!(
-                        "  {} = call i8* @orda_pqc_mldsa_sign(i8* {})\n",
-                        sig_ptr, current_ptr
+                        "  {} = call i8* @orda_pqc_mldsa_sign(i8* {}, i8* {})\n",
+                        sig_ptr, current_ptr, alias_str
                     ));
                     // Operations usually continue on the root pointer for state mutations
                 }
@@ -146,7 +149,7 @@ impl LlvmBackend {
         final_code.push_str("declare i8* @state_new()\n");
         final_code.push_str("declare i8* @allocate_heap_memory(i32)\n");
         final_code.push_str("declare void @make_mutable(i8*)\n");
-        final_code.push_str("declare i8* @orda_pqc_mldsa_sign(i8*)\n");
+        final_code.push_str("declare i8* @orda_pqc_mldsa_sign(i8*, i8*)\n");
         final_code.push_str("declare void @storage_engine_commit(i8*)\n");
         final_code.push_str("declare void @net_layer_stream(i8*)\n");
         final_code.push_str("declare i1 @is_empty(i8*)\n");

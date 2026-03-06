@@ -35,7 +35,7 @@ pub enum SuffixMorpheme {
     StreamData,
 
     // Cryptography & Protocols (PQC Ready)
-    SignWithMLDSA,
+    SignWithMLDSA(String), // The explicit Key Alias avoids Hidden Context
     VerifyConsensus,
 
     // Control Flow (Temporal markers)
@@ -48,7 +48,7 @@ impl SuffixMorpheme {
         match self {
             SuffixMorpheme::AllocHeap => StateFlags::IS_ALLOCATED,
             SuffixMorpheme::MakeMutable => StateFlags::IS_MUTABLE,
-            SuffixMorpheme::SignWithMLDSA => StateFlags::IS_SIGNED,
+            SuffixMorpheme::SignWithMLDSA(_) => StateFlags::IS_SIGNED,
             SuffixMorpheme::StreamData => StateFlags::IS_STREAMING,
             _ => StateFlags::empty(),
         }
@@ -81,7 +81,7 @@ impl MorphemeRegistry {
                 // A state cannot be made mutable twice in a row natively
                 !current_state.contains(StateFlags::IS_MUTABLE)
             }
-            SuffixMorpheme::SignWithMLDSA => {
+            SuffixMorpheme::SignWithMLDSA(_) => {
                 // Cryptographic signatures are primarily applied to abstract State Objects or Mem Pointers
                 matches!(
                     root,
