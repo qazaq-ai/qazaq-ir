@@ -27,12 +27,12 @@ Symbolizes the heartbeat, moving blood, and a living, deterministic artificial i
 /* Give the Hero text more breathing room by decreasing image container constraints */
 @media (min-width: 960px) {
   .VPHero.has-image .main {
-    max-width: 800px !important;
-    width: calc(100% - 200px) !important;
+    max-width: 900px !important;
+    width: calc(100% - 160px) !important;
   }
 
   .VPHero.has-image .image {
-    width: 200px !important;
+    width: 140px !important;
     flex-shrink: 0;
     transform: none !important;
 
