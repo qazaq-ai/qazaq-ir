@@ -26,16 +26,21 @@ impl QazaqLexer {
 
         // O(n) Linear compilation and morphological validation
         for token in &payload.tokens {
+            // O(1) State Machine accumulation
+            let mut current_state = crate::morpheme_registry::StateFlags::empty();
             let mut validated_morphs = Vec::new();
 
             for suffix in &token.morphs {
-                // O(1) Compatibility Check preventing structural hallucinations entirely
-                if !MorphemeRegistry::is_compatible(&token.root, &validated_morphs, suffix) {
+                // Absolute O(1) Compatibility Check based on registers
+                if !MorphemeRegistry::is_compatible(&token.root, current_state, suffix) {
                     return Err(format!(
-                        "FATAL HALLUCINATION: Suffix '{:?}' cannot be mathematically agglutinated to Root '{:?}' with preceding morphs {:?}",
-                        suffix, token.root, validated_morphs
+                        "FATAL HALLUCINATION: Suffix '{:?}' cannot be mathematically agglutinated to Root '{:?}' at State '{:?}' (preceding morphs: {:?})",
+                        suffix, token.root, current_state, validated_morphs
                     ));
                 }
+
+                // Mutate state with Bitwise OR
+                current_state |= suffix.as_flag();
                 validated_morphs.push(suffix.clone());
             }
         }
