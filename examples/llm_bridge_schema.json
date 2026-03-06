@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RouterPayload",
+  "description": "The rigid Semantic Router acting as a \"straightjacket\" for LLM generated intents. It strictly defines what JSON is accepted from the model.",
+  "type": "object",
+  "required": [
+    "tokens"
+  ],
+  "properties": {
+    "tokens": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgglutinativeToken"
+      }
+    }
+  },
+  "definitions": {
+    "AgglutinativeToken": {
+      "description": "The fundamental building block of Qazaq IR Architecture. Replaces traditional AST nodes with a flat, structurally guaranteed agglutinative chain.",
+      "type": "object",
+      "required": [
+        "morphs",
+        "root"
+      ],
+      "properties": {
+        "morphs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SuffixMorpheme"
+          }
+        },
+        "root": {
+          "$ref": "#/definitions/RootEntity"
+        }
+      }
+    },
+    "RootEntity": {
+      "description": "Roots - fundamental execution targets acting as immutable substrates.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "value"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "MemoryPointer"
+              ]
+            },
+            "value": {
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0.0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "value"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "DatabaseTable"
+              ]
+            },
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "value"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "NetworkSocket"
+              ]
+            },
+            "value": {
+              "type": "integer",
+              "format": "uint16",
+              "minimum": 0.0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "value"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "StateObject"
+              ]
+            },
+            "value": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "SuffixMorpheme": {
+      "description": "Suffixes - strictly isolated functions with a single zone of responsibility.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "AllocHeap",
+            "MakeMutable",
+            "WriteToTarget",
+            "StreamData",
+            "VerifyConsensus",
+            "IterateUntilEmpty",
+            "BranchIfValid"
+          ]
+        },
+        {
+          "type": "object",
+          "required": [
+            "SignWithMLDSA"
+          ],
+          "properties": {
+            "SignWithMLDSA": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

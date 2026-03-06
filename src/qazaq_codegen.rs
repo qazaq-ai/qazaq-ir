@@ -69,6 +69,13 @@ impl CodegenBackend {
                         root_var_name
                     ));
                 }
+                SuffixMorpheme::BranchIfValid => {
+                    emit_buffer.push_str("// [Suffix] BranchIfValid: Conditional evaluation\n");
+                    emit_buffer.push_str(&format!(
+                        "if {}.is_valid() {{\n    // Execute branch\n}}\n",
+                        root_var_name
+                    ));
+                }
                 SuffixMorpheme::VerifyConsensus => {
                     emit_buffer.push_str(
                         "// [Suffix] VerifyConsensus: Validating state via network consensus\n",

@@ -1,8 +1,9 @@
 use bitflags::bitflags;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// Roots - fundamental execution targets acting as immutable substrates.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "type", content = "value")]
 pub enum RootEntity {
     MemoryPointer(usize),
@@ -20,11 +21,15 @@ bitflags! {
         const IS_MUTABLE   = 1 << 1;
         const IS_SIGNED    = 1 << 2;
         const IS_STREAMING = 1 << 3;
+
+        // Control Flow State tracking for Turing completeness
+        const ITERATED     = 1 << 4;
+        const BRANCHED     = 1 << 5;
     }
 }
 
 /// Suffixes - strictly isolated functions with a single zone of responsibility.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash, JsonSchema)]
 pub enum SuffixMorpheme {
     // Memory & State Management
     AllocHeap,
@@ -40,6 +45,7 @@ pub enum SuffixMorpheme {
 
     // Control Flow (Temporal markers)
     IterateUntilEmpty,
+    BranchIfValid,
 }
 
 impl SuffixMorpheme {
@@ -50,6 +56,8 @@ impl SuffixMorpheme {
             SuffixMorpheme::MakeMutable => StateFlags::IS_MUTABLE,
             SuffixMorpheme::SignWithMLDSA(_) => StateFlags::IS_SIGNED,
             SuffixMorpheme::StreamData => StateFlags::IS_STREAMING,
+            SuffixMorpheme::IterateUntilEmpty => StateFlags::ITERATED,
+            SuffixMorpheme::BranchIfValid => StateFlags::BRANCHED,
             _ => StateFlags::empty(),
         }
     }
@@ -91,6 +99,11 @@ impl MorphemeRegistry {
             SuffixMorpheme::StreamData => {
                 // Streaming is typically bounded to Network Sockets
                 matches!(root, RootEntity::NetworkSocket(_))
+            }
+            SuffixMorpheme::IterateUntilEmpty | SuffixMorpheme::BranchIfValid => {
+                // Only allocated data or abstract states can branch/iterate safely
+                current_state.intersects(StateFlags::IS_ALLOCATED)
+                    || matches!(root, RootEntity::StateObject(_))
             }
             // By default, other morphemes have unconstrained agglutination in this MVP scope
             _ => true,

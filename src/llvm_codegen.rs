@@ -117,6 +117,24 @@ impl LlvmBackend {
 
                     emit_buffer.push_str(&format!("{}:\n", end_bb));
                 }
+                SuffixMorpheme::BranchIfValid => {
+                    let valid_bb = format!("valid_{}", var_counter);
+                    let invalid_bb = format!("invalid_{}", var_counter);
+                    let cond_val = format!("%var_{}", var_counter);
+                    *var_counter += 1;
+                    emit_buffer.push_str("  ; [Suffix] BranchIfValid: Conditional guard\n");
+                    emit_buffer.push_str(&format!(
+                        "  {} = call i1 @is_valid(i8* {})\n",
+                        cond_val, current_ptr
+                    ));
+                    emit_buffer.push_str(&format!(
+                        "  br i1 {}, label %{}, label %{}\n\n",
+                        cond_val, valid_bb, invalid_bb
+                    ));
+
+                    emit_buffer.push_str(&format!("{}:\n", valid_bb));
+                    // In a strictly linear IR, invalid_bb would represent the end of the conditionally evaluated block.
+                }
                 SuffixMorpheme::VerifyConsensus => {
                     emit_buffer.push_str(
                         "  ; [Suffix] VerifyConsensus: Validating state via network consensus\n",
@@ -153,6 +171,7 @@ impl LlvmBackend {
         final_code.push_str("declare void @storage_engine_commit(i8*)\n");
         final_code.push_str("declare void @net_layer_stream(i8*)\n");
         final_code.push_str("declare i1 @is_empty(i8*)\n");
+        final_code.push_str("declare i1 @is_valid(i8*)\n");
         final_code.push_str("declare void @consensus_layer_verify_state(i8*)\n\n");
 
         // 2. Main Execution Block

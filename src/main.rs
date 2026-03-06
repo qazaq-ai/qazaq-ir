@@ -13,16 +13,20 @@ use std::time::Instant;
 #[command(about = "Compiles Qazaq IR JSON intents into executable representations without hidden context.", long_about = None)]
 struct Cli {
     /// Path to the input JSON file containing the Intent Payload
-    #[arg(required = true)]
-    input: PathBuf,
+    #[arg(required_unless_present = "emit_schema")]
+    input: Option<PathBuf>,
 
     /// Output file path (e.g. output.ll or output.rs)
-    #[arg(short, long, required = true)]
-    output: PathBuf,
+    #[arg(short, long, required_unless_present = "emit_schema")]
+    output: Option<PathBuf>,
 
     /// Target backend to emit (llvm or rust)
-    #[arg(short, long, value_enum)]
-    emit: EmitTarget,
+    #[arg(short, long, value_enum, required_unless_present = "emit_schema")]
+    emit: Option<EmitTarget>,
+
+    /// Export the required JSON Schema for LLM tool integration
+    #[arg(long)]
+    emit_schema: bool,
 }
 
 #[derive(ValueEnum, Clone, Debug)]
@@ -34,18 +38,27 @@ enum EmitTarget {
 fn main() {
     let cli = Cli::parse();
 
+    if cli.emit_schema {
+        println!("{}", qazaq_ir::LlmBridge::generate_ai_schema());
+        return;
+    }
+
+    let input_path = cli.input.unwrap();
+    let output_path = cli.output.unwrap();
+    let emit_target = cli.emit.unwrap();
+
     println!(
         "\n{}\n",
         "=== Qazaq IR Compiler (qazaqc) v0.2.0 ===".bold().cyan()
     );
-    println!("{} {}", "Input Payload:".bold(), cli.input.display());
-    println!("{} {:?} Target", "Emitting to:".bold(), cli.emit);
+    println!("{} {}", "Input Payload:".bold(), input_path.display());
+    println!("{} {:?} Target", "Emitting to:".bold(), emit_target);
 
     // Track total compilation time (to highlight our O(1) speed)
     let start_time = Instant::now();
 
     // 1. Read input JSON
-    let json_content = match fs::read_to_string(&cli.input) {
+    let json_content = match fs::read_to_string(&input_path) {
         Ok(content) => content,
         Err(e) => {
             eprintln!("{} Failed to read input file: {}", "ERROR:".red().bold(), e);
@@ -78,7 +91,7 @@ fn main() {
     );
 
     // 3. Emit via requested backend
-    let emitted_code = match cli.emit {
+    let emitted_code = match emit_target {
         EmitTarget::Llvm => {
             println!("{} Generating LLVM IR via Backend...", "»".cyan());
             LlvmBackend::emit_module(&tokens)
@@ -90,7 +103,7 @@ fn main() {
     };
 
     // 4. Write output file
-    if let Err(e) = fs::write(&cli.output, emitted_code) {
+    if let Err(e) = fs::write(&output_path, emitted_code) {
         eprintln!(
             "{} Failed to write output file: {}",
             "ERROR:".red().bold(),
@@ -104,7 +117,7 @@ fn main() {
     println!(
         "\n{} Successfully compiled into {}",
         "SUCCESS:".green().bold(),
-        cli.output.display().to_string().yellow()
+        output_path.display().to_string().yellow()
     );
     println!("{} {:?}", "Compilation Time:".bold(), elapsed);
     println!("{}\n", "=========================================".cyan());

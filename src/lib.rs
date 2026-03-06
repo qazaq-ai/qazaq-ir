@@ -1,3 +1,4 @@
+pub mod llm_bridge;
 pub mod llvm_codegen;
 pub mod morpheme_registry;
 pub mod orda_pqc;
@@ -6,6 +7,7 @@ pub mod qazaq_lexer;
 pub mod semantic_router;
 
 // Architectural export for the Qazaq IR MVP Compiler
+pub use llm_bridge::LlmBridge;
 pub use llvm_codegen::LlvmBackend;
 pub use morpheme_registry::{MorphemeRegistry, RootEntity, SuffixMorpheme};
 pub use qazaq_codegen::CodegenBackend;

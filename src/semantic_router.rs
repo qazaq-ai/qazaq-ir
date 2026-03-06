@@ -1,9 +1,10 @@
 use crate::qazaq_lexer::{AgglutinativeToken, QazaqLexer};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// The rigid Semantic Router acting as a "straightjacket" for LLM generated intents.
 /// It strictly defines what JSON is accepted from the model.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct RouterPayload {
     pub tokens: Vec<AgglutinativeToken>,
 }

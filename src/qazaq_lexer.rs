@@ -1,9 +1,10 @@
 use crate::morpheme_registry::{MorphemeRegistry, RootEntity, SuffixMorpheme};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// The fundamental building block of Qazaq IR Architecture.
 /// Replaces traditional AST nodes with a flat, structurally guaranteed agglutinative chain.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct AgglutinativeToken {
     pub root: RootEntity,
     pub morphs: Vec<SuffixMorpheme>,
