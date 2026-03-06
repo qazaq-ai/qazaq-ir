@@ -1,18 +1,20 @@
 pub mod morpheme_registry;
 pub mod qazaq_codegen;
 pub mod qazaq_lexer;
+pub mod semantic_router;
 
 // Architectural export for the Qazaq IR MVP Compiler
 pub use morpheme_registry::{MorphemeRegistry, RootEntity, SuffixMorpheme};
 pub use qazaq_codegen::CodegenBackend;
-pub use qazaq_lexer::{AgglutinativeToken, IRPayload, QazaqLexer};
+pub use qazaq_lexer::{AgglutinativeToken, QazaqLexer};
+pub use semantic_router::{RouterError, RouterPayload, SemanticRouter};
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn test_valid_agglutination() {
+    fn test_e2e_semantic_router_valid_agglutination() {
         let valid_payload = r#"{
             "tokens": [
                 {
@@ -22,7 +24,7 @@ mod tests {
             ]
         }"#;
 
-        let result = QazaqLexer::parse_and_validate(valid_payload);
+        let result = SemanticRouter::parse_intent_payload(valid_payload);
         assert!(result.is_ok(), "Valid topology should pass compilation");
 
         let tokens = result.unwrap();
@@ -34,7 +36,7 @@ mod tests {
     }
 
     #[test]
-    fn test_fatal_hallucination() {
+    fn test_e2e_fatal_hallucination() {
         // Attempting to write to a StateObject without first allocating or making mutable
         let hallucinated_payload = r#"{
             "tokens": [
@@ -45,18 +47,22 @@ mod tests {
             ]
         }"#;
 
-        let result = QazaqLexer::parse_and_validate(hallucinated_payload);
+        let result = SemanticRouter::parse_intent_payload(hallucinated_payload);
         assert!(
             result.is_err(),
             "Hallucinated topology must fail immediately"
         );
 
-        let err_msg = result.unwrap_err();
-        assert!(err_msg.contains("FATAL HALLUCINATION"));
+        match result.unwrap_err() {
+            RouterError::HallucinationDetected(msg) => {
+                assert!(msg.contains("FATAL HALLUCINATION"));
+            }
+            _ => panic!("Expected hallucination detection"),
+        }
     }
 
     #[test]
-    fn test_codegen_emission() {
+    fn test_e2e_codegen_emission() {
         let valid_payload = r#"{
             "tokens": [
                 {
@@ -66,7 +72,7 @@ mod tests {
             ]
         }"#;
 
-        let tokens = QazaqLexer::parse_and_validate(valid_payload).unwrap();
+        let tokens = SemanticRouter::parse_intent_payload(valid_payload).unwrap();
         let emitted_code = CodegenBackend::emit_payload(&tokens);
 
         assert!(emitted_code.contains("fn qazaq_ir_main()"));
