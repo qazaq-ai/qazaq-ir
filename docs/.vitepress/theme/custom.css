@@ -11,28 +11,39 @@ Symbolizes the heartbeat, moving blood, and a living, deterministic artificial i
   --vp-c-brand-soft: rgba(229, 57, 53, 0.16);
 }
 
+/* Explicitly constrain the logo image to 128px */
+.VPHero .image-container {
+  width: 128px !important;
+  height: 128px !important;
+  /* Add bottom margin on mobile to prevent overlapping with text */
+  margin: 0 auto 48px auto !important;
+}
+
+/* Hide the default gradient blob background from Vitepress Hero */
+.VPHero .image-bg {
+  display: none !important;
+}
+
 /* Give the Hero text more breathing room by decreasing image container constraints */
 @media (min-width: 960px) {
   .VPHero.has-image .main {
     max-width: 800px !important;
     width: calc(100% - 200px) !important;
   }
-  
+
   .VPHero.has-image .image {
     width: 200px !important;
     flex-shrink: 0;
     transform: none !important;
+
+    /* Vertically and horizontally center the logo on large screens */
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
   }
-}
 
-/* Explicitly constrain the logo image to 128px and center it vertically */
-.VPHero .image-container {
-  width: 128px !important;
-  height: 128px !important;
-  margin: 0 auto;
-}
-
-/* Hide the default gradient blob background from Vitepress Hero */
-.VPHero .image-bg {
-  display: none !important;
+  .VPHero .image-container {
+    /* Reset bottom margin on desktop since it's side-by-side */
+    margin: 0 auto !important;
+  }
 }
