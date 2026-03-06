@@ -12,3 +12,6 @@ docs/.vitepress/dist/
 .env
 .DS_Store
 docs/.vitepress/.temp
+
+# PDF Exports (Local only)
+WHITEPAPER.pdf
