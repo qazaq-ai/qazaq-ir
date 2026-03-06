@@ -25,7 +25,7 @@
   <style>
     .stroke {
       fill: none;
-      stroke: rgba(229, 57, 53, .5);
+      stroke: rgba(229, 57, 53, .35);
       stroke-width: 45;
       stroke-linecap: round;
     }
