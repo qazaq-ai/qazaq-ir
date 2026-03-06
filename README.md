@@ -16,7 +16,46 @@ Modern Large Language Models (LLMs) suffer from severe energy inefficiencies and
 **Qazaq IR** introduces a paradigm shift. Inspired by the strict mathematical rules of the agglutinative Kazak language, it provides a deterministic, linear O(n) intermediate compilation layer for AI. By assembling logic through immutable "roots" and isolated functional "suffixes" (morphemes) without hidden contexts, Qazaq IR eliminates code ambiguity and drastically reduces the energy cost of automated code generation.
 
 ## 📄 Documentation
+* Live Documentation: **[Qazaq IR Vitepress Site](https://qazaq-ai.github.io/qazaq-ir/)**
 * The Whitepaper: **[Read the Qazaq IR Whitepaper](./WHITEPAPER.md)**
+
+## 🚀 Quick Start (CLI Compiler)
+
+Qazaq IR comes with the `qazaqc` command-line tool to compile JSON intents directly into executable artifacts without Hidden Context.
+
+### Valid Transaction (ML-DSA)
+Use the included example to generate mathematically validated LLVM IR for a Post-Quantum signature transaction:
+```bash
+$ cargo run --bin qazaqc -- examples/01_pqc_transaction.json --output test.ll --emit llvm
+
+=== Qazaq IR Compiler (qazaqc) v0.2.0 ===
+
+Input Payload: examples/01_pqc_transaction.json
+Emitting to: Llvm Target
+» JSON loaded. Routing Intent...
+» Intent topology mathematically validated. No hallucinations detected. (1 tokens)
+» Generating LLVM IR via Backend...
+
+SUCCESS: Successfully compiled into test.ll
+Compilation Time: 554.167µs
+=========================================
+```
+
+### Hallucination Protection
+Attempting to compile an invalid LLM hallucination (e.g. writing data *before* allocating memory) fails safely in O(1) time:
+```bash
+$ cargo run --bin qazaqc -- examples/02_fatal_hallucination.json --output test.ll --emit llvm
+
+=== Qazaq IR Compiler (qazaqc) v0.2.0 ===
+
+Input Payload: examples/02_fatal_hallucination.json
+Emitting to: Llvm Target
+» JSON loaded. Routing Intent...
+
+HALLUCINATION DETECTED: COMPILATION ABORTED
+
+HallucinationDetected("FATAL HALLUCINATION: Suffix [WriteToTarget] illegally agglutinated to Root [StateObject(\"Transaction\")]. Intent rejected.")
+```
 
 ## ⚖️ License & Copyright
 
