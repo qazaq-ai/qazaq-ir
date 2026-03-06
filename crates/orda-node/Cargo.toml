@@ -1,0 +1,8 @@
+[package]
+name = "orda-node"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+qazaq-ir = { path = "../qazaq-ir" }
+colored = "2.1.0"
