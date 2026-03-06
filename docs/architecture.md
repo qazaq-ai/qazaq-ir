@@ -1,4 +1,4 @@
-# Architecture: The $O(1)$ Agglutinative IR
+# Architecture: The O(1) Agglutinative IR
 
 ## Farewell ASTs. Welcome Linear Chains.
 
