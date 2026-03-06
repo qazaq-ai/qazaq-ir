@@ -1,9 +1,11 @@
+pub mod llvm_codegen;
 pub mod morpheme_registry;
 pub mod qazaq_codegen;
 pub mod qazaq_lexer;
 pub mod semantic_router;
 
 // Architectural export for the Qazaq IR MVP Compiler
+pub use llvm_codegen::LlvmBackend;
 pub use morpheme_registry::{MorphemeRegistry, RootEntity, SuffixMorpheme};
 pub use qazaq_codegen::CodegenBackend;
 pub use qazaq_lexer::{AgglutinativeToken, QazaqLexer};
@@ -80,5 +82,27 @@ mod tests {
         assert!(emitted_code.contains("let mut usersession_state = allocate_heap_memory(1024);"));
         assert!(emitted_code.contains("let signature = orda_pqc::mldsa_sign(&usersession_state);"));
         assert!(emitted_code.contains("storage_engine::commit(&usersession_state);"));
+    }
+
+    #[test]
+    fn test_e2e_llvm_emission() {
+        let valid_payload = r#"{
+            "tokens": [
+                {
+                    "root": { "type": "StateObject", "value": "UserSession" },
+                    "morphs": ["AllocHeap", "SignWithMLDSA", "WriteToTarget"]
+                }
+            ]
+        }"#;
+
+        let tokens = SemanticRouter::parse_intent_payload(valid_payload).unwrap();
+        let emitted_ll = LlvmBackend::emit_module(&tokens);
+
+        assert!(emitted_ll.contains("target datalayout = "));
+        assert!(emitted_ll.contains("define i32 @qazaq_main() {"));
+        assert!(emitted_ll.contains("%root_1 = call i8* @state_new()"));
+        assert!(emitted_ll.contains("%var_2 = call i8* @allocate_heap_memory(i32 1024)"));
+        assert!(emitted_ll.contains("%var_3 = call i8* @orda_pqc_mldsa_sign(i8* %var_2)"));
+        assert!(emitted_ll.contains("call void @storage_engine_commit(i8* %var_2)"));
     }
 }
