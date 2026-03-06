@@ -1,7 +1,7 @@
 # Qazaq IR (Intermediate Representation)
 
 <p align="center">
-  <img src="./assets/shanraq_neuron.svg" alt="Qazaq IR Logo: The Shanraq Neuron" width="250"/>
+  <img src="./assets/shanraq_neuron.svg" alt="Qazaq IR Logo: The Shanraq Neuron" width="128"/>
 </p>
 
 > **The First Agglutinative Intermediate Representation for Deterministic LLM Code Generation.**

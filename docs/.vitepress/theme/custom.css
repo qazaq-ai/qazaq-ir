@@ -1,0 +1,38 @@
+/* 
+Blood Red Theme 
+Symbolizes the heartbeat, moving blood, and a living, deterministic artificial intelligence.
+*/
+:root {
+  --vp-c-brand-1: #e53935;
+  --vp-c-brand-2: #d32f2f;
+  --vp-c-brand-3: #b71c1c;
+
+  /* Accent highlights for selection and soft backgrounds */
+  --vp-c-brand-soft: rgba(229, 57, 53, 0.16);
+}
+
+/* Give the Hero text more breathing room by decreasing image container constraints */
+@media (min-width: 960px) {
+  .VPHero.has-image .main {
+    max-width: 800px !important;
+    width: calc(100% - 200px) !important;
+  }
+  
+  .VPHero.has-image .image {
+    width: 200px !important;
+    flex-shrink: 0;
+    transform: none !important;
+  }
+}
+
+/* Explicitly constrain the logo image to 128px and center it vertically */
+.VPHero .image-container {
+  width: 128px !important;
+  height: 128px !important;
+  margin: 0 auto;
+}
+
+/* Hide the default gradient blob background from Vitepress Hero */
+.VPHero .image-bg {
+  display: none !important;
+}

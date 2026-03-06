@@ -1,5 +1,5 @@
 <!-- static/brand/shaman.svg -->
-<svg class="rounded-circle" width="48" height="48" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+<svg class="rounded-circle" width="128" height="128" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
   <g style="transform: scale(0.85); transform-origin: 200px 200px;">
     <g class="heartbeat">
       <!-- Stroke lines -->
@@ -25,14 +25,14 @@
   <style>
     .stroke {
       fill: none;
-      stroke: rgba(0, 255, 255, .5);
+      stroke: rgba(229, 57, 53, .5);
       stroke-width: 45;
       stroke-linecap: round;
     }
 
     .flow {
       fill: none;
-      stroke: #00ffff;
+      stroke: #e53935;
       stroke-width: 30;
       stroke-linecap: round;
       stroke-dasharray: 60;
