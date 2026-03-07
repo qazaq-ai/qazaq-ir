@@ -48,8 +48,16 @@ echo -e "\n${GREEN}» JSON Payload Extracted:${NC}"
 echo "$CLEAN_JSON"
 echo "$CLEAN_JSON" > temp_intent.json
 
-echo -e "\n${YELLOW}⚙️  Qazaq IR Compilation...${NC}"
-# The user's target requested format:
-cargo run --bin qazaqc -- temp_intent.json --emit llvm --output llvm_output.ll
+echo -e "\n${YELLOW}🌐 Sending Intent to Orda Node API Gateway...${NC}"
+# Send the parsed JSON to the running Orda Node
+curl -s -X POST -H 'Content-Type: application/json' -d @temp_intent.json http://127.0.0.1:3000/intent
+echo ""
+
+echo -e "\n${YELLOW}⏳ Waiting for background Execution Engine...${NC}"
+sleep 1
+
+echo -e "\n${GREEN}💰 Fetching New Balance from State Machine...${NC}"
+curl -s http://127.0.0.1:3000/balance/1 | jq .
+echo ""
 
 echo -e "\n${GREEN}=== Operation Complete ===${NC}"
