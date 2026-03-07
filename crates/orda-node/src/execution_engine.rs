@@ -14,17 +14,22 @@ impl ExecutionEngine {
     /// Placed on a background `tokio::spawn` task, endlessly drains the mempool
     pub async fn run_loop(mempool: Arc<Mutex<TransactionPool>>, state: Arc<Mutex<State>>) {
         loop {
-            // Scope the lock to drop immediately after draining so the API can write concurrently
             let tokens = {
                 let mut pool = mempool.lock().unwrap();
-                pool.drain_all()
+                let drained = pool.drain_all();
+                drop(pool); // explicitly drop to unlock for Axum
+                drained
             };
 
             if tokens.is_empty() {
-                // Sleep to avoid CPU hogging when Mempool is empty
+                // Sleep to avoid CPU hogging and YIELD to the tokio scheduler
                 sleep(Duration::from_millis(500)).await;
                 continue;
             }
+            println!(
+                "⚙️  [Engine] Drained {} token(s) from Mempool",
+                tokens.len()
+            );
 
             println!(
                 "\n{}",
