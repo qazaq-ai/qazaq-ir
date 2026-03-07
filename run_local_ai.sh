@@ -29,6 +29,7 @@ echo -e "Prompt: \"$PROMPT\""
 RESPONSE=$(curl -s -X POST http://localhost:11434/api/generate -d "{
   \"model\": \"qazaq-ai\",
   \"prompt\": \"$PROMPT\",
+  \"format\": \"json\",
   \"stream\": false
 }")
 
@@ -49,6 +50,6 @@ echo "$CLEAN_JSON" > temp_intent.json
 
 echo -e "\n${YELLOW}⚙️  Qazaq IR Compilation...${NC}"
 # The user's target requested format:
-cargo run --bin qazaqc -- temp_intent.json --emit llvm
+cargo run --bin qazaqc -- temp_intent.json --emit llvm --output llvm_output.ll
 
 echo -e "\n${GREEN}=== Operation Complete ===${NC}"
