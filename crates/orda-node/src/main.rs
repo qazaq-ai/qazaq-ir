@@ -5,7 +5,7 @@ pub mod mempool;
 pub mod p2p;
 pub mod state;
 
-use crate::p2p::{GOSSIPSUB_TOPIC, OrdaBehaviour, OrdaBehaviourEvent, create_swarm};
+use crate::p2p::{GOSSIPSUB_TOPIC, OrdaBehaviourEvent, create_swarm};
 use crate::state::State;
 use api::{AppState, create_router};
 use colored::*;
