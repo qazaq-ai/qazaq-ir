@@ -1,7 +1,6 @@
 use libp2p::gossipsub::{self, MessageAuthenticity, ValidationMode};
 use libp2p::mdns;
 use libp2p::swarm::NetworkBehaviour;
-use libp2p::swarm::SwarmEvent;
 use libp2p::{Swarm, SwarmBuilder, identity, noise, tcp, yamux};
 use std::collections::hash_map::DefaultHasher;
 use std::error::Error;
